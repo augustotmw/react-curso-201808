@@ -1,8 +1,11 @@
 
 const api = {
     add: "adicionar",
+    addTweet: "adicionaTweet",
     del: "remover",
-    load: "carregar"
+    delTweet: "removeTweet",
+    load: "carregar",
+    like: "curtir"
 }
 
 export const carregar = () => {
@@ -42,10 +45,24 @@ export const remover = (identificador) => {
         .then((response) => {
             console.log(response);
             dispatch({ type: api.del, identificador});
+            dispatch({ type: api.delTweet });
             if(response.removidos && response.removidos > 0 && response.message) {
                 alert(response.message);
             }
         }); 
+    });
+}
+
+export const curtir = (identificador) => {
+    return(dispatch => {
+        fetch(`https://twitelum-api.herokuapp.com/tweets/${identificador}/like?X-AUTH-TOKEN=${localStorage.getItem('TOKEN')}`,
+    {method: "POST"})
+        .then(response => response.json())
+        .then(response => {
+            console.log("liked: ", response);
+            dispatch({ type: api.like, identificador, liker: 'augustotmw'});
+            alert(response.message);
+        });
     });
 }
 

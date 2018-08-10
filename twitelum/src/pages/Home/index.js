@@ -1,8 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 //carrega montando como filhos do objeto TweetsAPI todos os "exports" do arquivo "../../api/TweetsAPI"
 import * as TweetsAPI from '../../api/TweetsAPI'; 
+
+import api from '../../api/TweetsAPI';
 
 import Cabecalho from '../../components/Cabecalho';
 import NavMenu from '../../components/NavMenu';
@@ -167,19 +170,31 @@ class Home extends Component {
 
         if(footer) return false;
 
+
+        
+
         const selecionado = this.state.tweets.find(tweet => tweet._id === idselecionado);
 
+        /* substituido pelo redux
         this.setState({
             mostrando: selecionado
         });
+        */
+
+        
+        this.context.store.dispatch({type: api.addTweet, selecionado});
+
     }
 
     fecharModal = (event) => {
         const modal = event.target.closest('.widget');
         if(!modal) {
+            /*
             this.setState({
                 mostrando: {}
             });
+            */
+           this.context.store.dispatch({type: api.delTweet});
         }
     }
 
@@ -200,7 +215,8 @@ class Home extends Component {
             //console.table(this.context.store.getState())
             this.setState({
                 //tweets: window.store.getState()
-                tweets: this.context.store.getState()
+                tweets: this.context.store.getState().lista,
+                mostrando: this.context.store.getState().mostrando
             });
         });
 
@@ -256,6 +272,7 @@ class Home extends Component {
                         <button type="submit" className="novoTweet__envia" disabled={this.state.novoTweet.length > 140 ? true : false}>Tweetar</button>
                         <button className="novoTweet__envia" type="button" onClick={this.clickHandler}>Incrementar: {this.state.valor}</button>
                     </form>
+                    <p className="totalTweets">Total de tweets: { this.props.qtde }</p>
                 </Widget>
                 <Widget>
                     <TrendsArea />
@@ -319,4 +336,15 @@ Home.contextTypes = {
 }
 
 
-export default Home;
+//conecta o state do redux com o props do componente ao chamar o connect(a,b)(c)
+const mapStateToProps = (state) => {
+    return { qtde: state.length}
+}
+
+//conecta
+const mapDispatchToProps = (dispatch, props) => {
+    return {}
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);;

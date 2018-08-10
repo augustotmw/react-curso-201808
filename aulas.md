@@ -521,7 +521,6 @@ export default App;
 
 
 
-
 ## OFF React
 
 
@@ -574,6 +573,11 @@ export default App;
 - Ciclo: View -> Action -> Dispatch -> Store -> View
 - SSOT - Single Source Of Truth - Origem Única De Verdade
 
+
+#### Presentational Component
+- Componente de apresentação que tem o estado guardado no Redux;
+- Componentes que só se "preocupam" com a camada de apresentação;
+- Que não tem lógica de manipulação de dados em si, mas conectado ao Redux;
 
 
 https://github.com/augustotmw/react-curso-201808.git
